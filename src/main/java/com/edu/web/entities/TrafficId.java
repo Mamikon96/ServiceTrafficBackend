@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Embeddable
 @EqualsAndHashCode
 @ToString
-public class RateServiceId implements Serializable {
+public class TrafficId implements Serializable {
     private static final long serialVersionUID = 7L;
 
     @Getter
@@ -22,10 +22,10 @@ public class RateServiceId implements Serializable {
     @Setter
     private Integer serviceId;
 
-    public RateServiceId() {
+    public TrafficId() {
     }
 
-    public RateServiceId(Integer rateId, Integer serviceId) {
+    public TrafficId(Integer rateId, Integer serviceId) {
         this.rateId = rateId;
         this.serviceId = serviceId;
     }

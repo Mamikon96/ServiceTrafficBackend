@@ -8,14 +8,14 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "rate_service")
-public class RateService implements Serializable {
+public class Traffic implements Serializable {
 
     private static final long serialVersionUID = 6L;
 
     @EmbeddedId
     @Getter
     @Setter
-    private RateServiceId id = new RateServiceId();
+    private TrafficId id = new TrafficId();
 
     @ManyToOne
     @MapsId("rateId")
@@ -34,10 +34,10 @@ public class RateService implements Serializable {
     @Setter
     private Integer traffic;
 
-    public RateService() {
+    public Traffic() {
     }
 
-    public RateService(Integer traffic) {
+    public Traffic(Integer traffic) {
         this.traffic = traffic;
     }
 }

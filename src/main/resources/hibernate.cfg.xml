@@ -18,6 +18,6 @@
         <mapping class="com.edu.web.entities.Service"></mapping>
         <mapping class="com.edu.web.entities.Client"></mapping>
         <mapping class="com.edu.web.entities.Consumption"></mapping>
-        <mapping class="com.edu.web.entities.RateService"></mapping>
+        <mapping class="com.edu.web.entities.Traffic"></mapping>
     </session-factory>
 </hibernate-configuration>
