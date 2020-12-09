@@ -12,6 +12,6 @@ public interface TrafficEntityService {
     List<Traffic> getByRateId(int rateId);
     List<Traffic> getByServiceId(int serviceId);
     Traffic getByTrafficId(TrafficId trafficId);
-    boolean update(TrafficId id, Traffic traffic);
-    boolean delete(TrafficId id);
+    boolean update(Traffic traffic);
+    boolean delete(Traffic traffic);
 }

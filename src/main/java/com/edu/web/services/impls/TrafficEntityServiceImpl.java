@@ -37,7 +37,7 @@ public class TrafficEntityServiceImpl implements TrafficEntityService {
             session.save(traffic);
             session.getTransaction().commit();
         } catch (Exception ex) {
-            log.error("Traffic adding Error!");
+            log.error(ex.getCause().toString());
             if (session != null) {
                 session.getTransaction().rollback();
             }
@@ -80,7 +80,7 @@ public class TrafficEntityServiceImpl implements TrafficEntityService {
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             session.beginTransaction();
-            Query query = session.createQuery("from Traffic where id.rateId = :rateId");
+            Query query = session.createQuery("from Traffic where trafficId.rateId = :rateId");
             query.setParameter("rateId", rateId);
             traffics = query.list();
             session.getTransaction().commit();
@@ -104,7 +104,7 @@ public class TrafficEntityServiceImpl implements TrafficEntityService {
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             session.beginTransaction();
-            Query query = session.createQuery("from Traffic where id.serviceId = :serviceId");
+            Query query = session.createQuery("from Traffic where trafficId.serviceId = :serviceId");
             query.setParameter("serviceId", serviceId);
             traffics = query.list();
             session.getTransaction().commit();
@@ -144,7 +144,7 @@ public class TrafficEntityServiceImpl implements TrafficEntityService {
     }
 
     @Override
-    public boolean update(TrafficId id, Traffic traffic) {
+    public boolean update(/*TrafficId id, */Traffic traffic) {
         Session session = null;
         boolean isUpdated = false;
         try {
@@ -167,14 +167,14 @@ public class TrafficEntityServiceImpl implements TrafficEntityService {
     }
 
     @Override
-    public boolean delete(TrafficId id) {
+    public boolean delete(Traffic traffic) {
         Session session = null;
         boolean isDeleted = false;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             session.beginTransaction();
-            Object persistentInstance = session.load(Traffic.class, id);
-            session.delete(persistentInstance);
+//            Object persistentInstance = session.get(Traffic.class, id);
+            session.delete(traffic);
 //            session.delete(service);
             session.getTransaction().commit();
             isDeleted = true;

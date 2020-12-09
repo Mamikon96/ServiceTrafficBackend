@@ -1,16 +1,18 @@
 package com.edu.web.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Entity
 @Table(name = "service")
-@ToString
 public class Service implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -26,15 +28,15 @@ public class Service implements Serializable {
     @Setter
     private String serviceName;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "rate_service",
-            joinColumns = @JoinColumn(name = "service_id"),
-            inverseJoinColumns = @JoinColumn(name = "rate_id")
+    @OneToMany(
+            mappedBy = "service",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER
     )
+    @JsonManagedReference(value = "service-rates")
     @Getter
     @Setter
-    private Set<Rate> rates;
+    private List<Traffic> rates = new ArrayList<>();
 
     public Service() {
     }
