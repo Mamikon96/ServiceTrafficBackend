@@ -144,7 +144,7 @@ public class TrafficEntityServiceImpl implements TrafficEntityService {
     }
 
     @Override
-    public boolean update(/*TrafficId id, */Traffic traffic) {
+    public boolean update(Traffic traffic) {
         Session session = null;
         boolean isUpdated = false;
         try {
