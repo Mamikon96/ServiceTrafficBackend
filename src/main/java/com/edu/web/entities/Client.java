@@ -19,7 +19,8 @@ public class Client implements Serializable {
     @Setter
     private Integer clientId;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
+    @JoinColumn(name = "rate_rateid")
     @Getter
     @Setter
     private Rate rate;
@@ -42,9 +43,17 @@ public class Client implements Serializable {
     @Column(name = "discount")
     @Getter
     @Setter
-    private int discount;
+    private Integer discount;
 
     public Client() {
+    }
+
+    public Client(Rate rate, String clientName, Date connectionDate, Date paymentDate, Integer discount) {
+        this.rate = rate;
+        this.clientName = clientName;
+        this.connectionDate = connectionDate;
+        this.paymentDate = paymentDate;
+        this.discount = discount;
     }
 
     @Override

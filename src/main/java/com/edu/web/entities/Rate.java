@@ -49,6 +49,9 @@ public class Rate implements Serializable {
     @Setter
     private List<Traffic> services = new ArrayList<>();
 
+    @OneToOne(mappedBy = "rate")
+    private Client client;
+
     public Rate() {
     }
 
