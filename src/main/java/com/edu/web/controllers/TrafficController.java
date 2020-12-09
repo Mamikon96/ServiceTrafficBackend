@@ -1,5 +1,6 @@
 package com.edu.web.controllers;
 
+import com.edu.web.entities.Rate;
 import com.edu.web.entities.Service;
 import com.edu.web.entities.Traffic;
 import com.edu.web.entities.TrafficId;
@@ -30,11 +31,17 @@ public class TrafficController {
     public ResponseEntity<?> create(@RequestBody Traffic traffic) {
         try {
             Traffic newTraffic = new Traffic(traffic.getTraffic());
-            newTraffic.setId(new TrafficId(traffic.getId().getRateId(), traffic.getId().getServiceId()));
+            newTraffic.setTrafficId(new TrafficId(traffic.getTrafficId().getRateId(), traffic.getTrafficId().getServiceId()));
+            Rate rate = new Rate();
+            rate.setRateId(traffic.getRate().getRateId());
+            Service service = new Service();
+            service.setServiceId(traffic.getService().getServiceId());
+            newTraffic.setRate(rate);
+            newTraffic.setService(service);
             trafficEntityService.create(newTraffic);
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (DBConnectionException ex) {
-            log.error(ex.getMessage());
+            log.error(ex.toString());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -52,7 +59,7 @@ public class TrafficController {
         }
     }
 
-    @GetMapping(value = "/traffics/byRate/{id}")
+    @GetMapping(value = "/traffics/rate/{id}")
     public ResponseEntity<List<Traffic>> getByRateId(@PathVariable(name = "id") int id) {
         final List<Traffic> traffics = trafficEntityService.getByRateId(id);
 
@@ -61,7 +68,7 @@ public class TrafficController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping(value = "/traffics/byService/{id}")
+    @GetMapping(value = "/traffics/service/{id}")
     public ResponseEntity<List<Traffic>> getByServiceId(@PathVariable(name = "id") int id) {
         final List<Traffic> traffics = trafficEntityService.getByServiceId(id);
 
@@ -70,27 +77,30 @@ public class TrafficController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping(value = "/traffics/{id}")
-    public ResponseEntity<Traffic> getByTrafficId(@PathVariable(name = "id") TrafficId id) {
-        final Traffic traffic = trafficEntityService.getByTrafficId(id);
+    @GetMapping(value = "/traffics/rate/{rateId}/service/{serviceId}")
+    public ResponseEntity<Traffic> getByTrafficId(@PathVariable(name = "rateId") Integer rateId,
+                                                  @PathVariable(name = "serviceId") Integer serviceId) {
+        TrafficId trafficId = new TrafficId(rateId, serviceId);
+        final Traffic traffic = trafficEntityService.getByTrafficId(trafficId);
 
         return traffic != null
                 ? new ResponseEntity<>(traffic, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PutMapping(value = "/traffics/{id}")
-    public ResponseEntity<?> update(@PathVariable(name = "id") TrafficId id, @RequestBody Traffic traffic) {
-        final boolean updated = trafficEntityService.update(id, traffic);
+    @PutMapping(value = "/traffics")
+    public ResponseEntity<?> update(@RequestBody Traffic traffic) {
+//        TrafficId trafficId = new TrafficId(rateId, serviceId);
+        final boolean updated = trafficEntityService.update(/*trafficId, */traffic);
 
         return updated
                 ? new ResponseEntity<>(HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
-    @DeleteMapping(value = "/traffics/{id}")
-    public ResponseEntity<?> delete(@PathVariable(name = "id") TrafficId id) {
-        final boolean deleted = trafficEntityService.delete(id);
+    @DeleteMapping(value = "/traffics")
+    public ResponseEntity<?> delete(@RequestBody Traffic traffic) {
+        final boolean deleted = trafficEntityService.delete(traffic);
 
         return deleted
                 ? new ResponseEntity<>(HttpStatus.OK)

@@ -1,11 +1,15 @@
 package com.edu.web.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -35,28 +39,33 @@ public class Rate implements Serializable {
     @Setter
     private Date expirationDate;
 
-    @ManyToMany(mappedBy = "rates")
+    @OneToMany(
+            mappedBy = "rate",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER
+    )
+    @JsonManagedReference
     @Getter
     @Setter
-    private Set<Service> services;
+    private List<Traffic> services = new ArrayList<>();
 
     public Rate() {
     }
 
-    public Rate(String rateName, Double price, Set<Service> services) {
+    public Rate(String rateName, Double price, List<Traffic> services) {
         this.rateName = rateName;
         this.price = price;
         this.services = services;
     }
 
-    public Rate(String rateName, Double price, Date expirationDate, Set<Service> services) {
+    public Rate(String rateName, Double price, Date expirationDate, List<Traffic> services) {
         this.rateName = rateName;
         this.price = price;
         this.expirationDate = expirationDate;
         this.services = services;
     }
 
-    @Override
+    /*@Override
     public String toString() {
         return "Rate{" +
                 "rateId=" + rateId +
@@ -64,5 +73,5 @@ public class Rate implements Serializable {
                 ", price=" + price +
                 ", expirationDate=" + expirationDate +
                 '}';
-    }
+    }*/
 }
