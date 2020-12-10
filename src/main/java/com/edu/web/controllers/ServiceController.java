@@ -1,7 +1,9 @@
 package com.edu.web.controllers;
 
 import com.edu.web.entities.Service;
+import com.edu.web.exceptions.DBConnectionException;
 import com.edu.web.services.ServiceEntityService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +11,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
+@RequestMapping("/api")
 @CrossOrigin
 public class ServiceController {
 
@@ -21,47 +25,67 @@ public class ServiceController {
     }
 
 
-    @PostMapping(value = "/services")
+    @PostMapping("/services")
     public ResponseEntity<?> create(@RequestBody Service service) {
-        Service newService = new Service(service.getServiceName());
-        serviceEntityService.create(newService);
-//        System.out.println(service);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        try {
+            Service newService = new Service(service.getServiceName());
+            serviceEntityService.create(newService);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (DBConnectionException ex) {
+            log.error(ex.getCause().toString());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
-    @GetMapping(value = "/services")
+    @GetMapping("/services")
     public ResponseEntity<List<Service>> getAll() {
-        final List<Service> services = serviceEntityService.getAll();
-
-        return services != null &&  !services.isEmpty()
-                ? new ResponseEntity<>(services, HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        try {
+            final List<Service> services = serviceEntityService.getAll();
+            return services != null && !services.isEmpty()
+                    ? new ResponseEntity<>(services, HttpStatus.OK)
+                    : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (DBConnectionException ex) {
+            log.error(ex.getCause().toString());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
-    @GetMapping(value = "/services/{id}")
+    @GetMapping("/services/{id}")
     public ResponseEntity<Service> getById(@PathVariable(name = "id") int id) {
-        final Service service = serviceEntityService.getById(id);
-
-        return service != null
-                ? new ResponseEntity<>(service, HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        try {
+            final Service service = serviceEntityService.getById(id);
+            return service != null
+                    ? new ResponseEntity<>(service, HttpStatus.OK)
+                    : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (DBConnectionException ex) {
+            log.error(ex.getCause().toString());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
-    @PutMapping(value = "/services/{id}")
+    @PutMapping("/services/{id}")
     public ResponseEntity<?> update(@PathVariable(name = "id") int id, @RequestBody Service service) {
-        final boolean updated = serviceEntityService.update(id, service);
-
-        return updated
-                ? new ResponseEntity<>(HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+        try {
+            final boolean updated = serviceEntityService.update(id, service);
+            return updated
+                    ? new ResponseEntity<>(HttpStatus.OK)
+                    : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+        } catch (DBConnectionException ex) {
+            log.error(ex.getCause().toString());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
-    @DeleteMapping(value = "/services/{id}")
+    @DeleteMapping("/services/{id}")
     public ResponseEntity<?> delete(@PathVariable(name = "id") int id) {
-        final boolean deleted = serviceEntityService.delete(id);
-
-        return deleted
-                ? new ResponseEntity<>(HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+        try {
+            final boolean deleted = serviceEntityService.delete(id);
+            return deleted
+                    ? new ResponseEntity<>(HttpStatus.OK)
+                    : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+        } catch (DBConnectionException ex) {
+            log.error(ex.getCause().toString());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

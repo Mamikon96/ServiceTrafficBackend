@@ -1,28 +1,19 @@
 package com.edu.web.services.impls;
 
 import com.edu.web.entities.Client;
-import com.edu.web.entities.Traffic;
 import com.edu.web.exceptions.DBConnectionException;
 import com.edu.web.services.ClientEntityService;
 import com.edu.web.utils.HibernateUtil;
-import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
-@Slf4j
+
 @Service
 public class ClientEntityServiceImpl implements ClientEntityService {
-
-    private static final Map<Integer, Client> CLIENT_REPOSITORY_MAP = new HashMap<>();
-
-    private static final AtomicInteger CLIENT_ID_HOLDER = new AtomicInteger();
 
     @Override
     public void create(Client client) throws DBConnectionException {
@@ -71,7 +62,6 @@ public class ClientEntityServiceImpl implements ClientEntityService {
             }
         }
         return clients;
-
     }
 
     @Override

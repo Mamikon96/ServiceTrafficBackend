@@ -16,6 +16,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
+@RequestMapping("/api")
 @CrossOrigin
 public class TrafficController {
 
@@ -27,7 +28,7 @@ public class TrafficController {
     }
 
 
-    @PostMapping(value = "/traffics")
+    @PostMapping("/traffics")
     public ResponseEntity<?> create(@RequestBody Traffic traffic) {
         try {
             Traffic newTraffic = new Traffic(traffic.getTraffic());
@@ -46,7 +47,7 @@ public class TrafficController {
         }
     }
 
-    @GetMapping(value = "/traffics")
+    @GetMapping("/traffics")
     public ResponseEntity<List<Traffic>> getAll() {
         try {
             final List<Traffic> traffics = trafficEntityService.getAll();
@@ -59,51 +60,70 @@ public class TrafficController {
         }
     }
 
-    @GetMapping(value = "/traffics/rate/{id}")
+    @GetMapping("/traffics/rate/{id}")
     public ResponseEntity<List<Traffic>> getByRateId(@PathVariable(name = "id") int id) {
-        final List<Traffic> traffics = trafficEntityService.getByRateId(id);
-
-        return traffics != null && !traffics.isEmpty()
-                ? new ResponseEntity<>(traffics, HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        try {
+            final List<Traffic> traffics = trafficEntityService.getByRateId(id);
+            return traffics != null && !traffics.isEmpty()
+                    ? new ResponseEntity<>(traffics, HttpStatus.OK)
+                    : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (DBConnectionException ex) {
+            log.error(ex.getCause().toString());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
-    @GetMapping(value = "/traffics/service/{id}")
+    @GetMapping("/traffics/service/{id}")
     public ResponseEntity<List<Traffic>> getByServiceId(@PathVariable(name = "id") int id) {
-        final List<Traffic> traffics = trafficEntityService.getByServiceId(id);
-
-        return traffics != null && !traffics.isEmpty()
-                ? new ResponseEntity<>(traffics, HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        try {
+            final List<Traffic> traffics = trafficEntityService.getByServiceId(id);
+            return traffics != null && !traffics.isEmpty()
+                    ? new ResponseEntity<>(traffics, HttpStatus.OK)
+                    : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (DBConnectionException ex) {
+            log.error(ex.getCause().toString());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
-    @GetMapping(value = "/traffics/rate/{rateId}/service/{serviceId}")
+    @GetMapping("/traffics/rate/{rateId}/service/{serviceId}")
     public ResponseEntity<Traffic> getByTrafficId(@PathVariable(name = "rateId") Integer rateId,
                                                   @PathVariable(name = "serviceId") Integer serviceId) {
-        TrafficId trafficId = new TrafficId(rateId, serviceId);
-        final Traffic traffic = trafficEntityService.getByTrafficId(trafficId);
-
-        return traffic != null
-                ? new ResponseEntity<>(traffic, HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        try {
+            TrafficId trafficId = new TrafficId(rateId, serviceId);
+            final Traffic traffic = trafficEntityService.getByTrafficId(trafficId);
+            return traffic != null
+                    ? new ResponseEntity<>(traffic, HttpStatus.OK)
+                    : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (DBConnectionException ex) {
+            log.error(ex.getCause().toString());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
-    @PutMapping(value = "/traffics")
+    @PutMapping("/traffics")
     public ResponseEntity<?> update(@RequestBody Traffic traffic) {
-//        TrafficId trafficId = new TrafficId(rateId, serviceId);
-        final boolean updated = trafficEntityService.update(/*trafficId, */traffic);
-
-        return updated
-                ? new ResponseEntity<>(HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+        try {
+            final boolean updated = trafficEntityService.update(traffic);
+            return updated
+                    ? new ResponseEntity<>(HttpStatus.OK)
+                    : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+        } catch (DBConnectionException ex) {
+            log.error(ex.getCause().toString());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
-    @DeleteMapping(value = "/traffics")
+    @DeleteMapping("/traffics")
     public ResponseEntity<?> delete(@RequestBody Traffic traffic) {
-        final boolean deleted = trafficEntityService.delete(traffic);
-
-        return deleted
-                ? new ResponseEntity<>(HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+        try {
+            final boolean deleted = trafficEntityService.delete(traffic);
+            return deleted
+                    ? new ResponseEntity<>(HttpStatus.OK)
+                    : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+        } catch (DBConnectionException ex) {
+            log.error(ex.getCause().toString());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
