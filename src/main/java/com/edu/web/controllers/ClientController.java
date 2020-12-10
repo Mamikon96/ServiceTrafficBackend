@@ -78,7 +78,7 @@ public class ClientController {
         }
     }
 
-    @PutMapping(value = "/clients")
+    @PutMapping("/clients")
     public ResponseEntity<?> update(@RequestBody Client client) {
         try {
             final boolean updated = clientEntityService.update(client);
@@ -92,7 +92,7 @@ public class ClientController {
         }
     }
 
-    @DeleteMapping(value = "/clients")
+    @DeleteMapping("/clients")
     public ResponseEntity<?> delete(@RequestBody Client client) {
         try {
             final boolean deleted = clientEntityService.delete(client);

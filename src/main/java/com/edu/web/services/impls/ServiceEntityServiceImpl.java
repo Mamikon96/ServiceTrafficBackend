@@ -1,29 +1,21 @@
 package com.edu.web.services.impls;
 
-import com.edu.web.services.ServiceEntityService;
 import com.edu.web.entities.Service;
+import com.edu.web.exceptions.DBConnectionException;
+import com.edu.web.services.ServiceEntityService;
 import com.edu.web.utils.HibernateUtil;
-import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
-@Slf4j
+
 @org.springframework.stereotype.Service
 public class ServiceEntityServiceImpl implements ServiceEntityService {
 
-    private static final Map<Integer, Service> SERVICE_REPOSITORY_MAP = new HashMap<>();
-
-    private static final AtomicInteger SERVICE_ID_HOLDER = new AtomicInteger();
-
-
     @Override
-    public void create(Service service) {
+    public void create(Service service) throws DBConnectionException {
         Session session = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
@@ -31,10 +23,13 @@ public class ServiceEntityServiceImpl implements ServiceEntityService {
             session.save(service);
             session.getTransaction().commit();
         } catch (Exception ex) {
-            log.error("Service adding Error!");
             if (session != null) {
                 session.getTransaction().rollback();
+                if (session.isOpen()) {
+                    session.close();
+                }
             }
+            throw new DBConnectionException(ex);
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
@@ -43,7 +38,7 @@ public class ServiceEntityServiceImpl implements ServiceEntityService {
     }
 
     @Override
-    public List<Service> getAll() {
+    public List<Service> getAll() throws DBConnectionException {
         Session session = null;
         List<Service> services = new ArrayList<>();
         try {
@@ -53,10 +48,13 @@ public class ServiceEntityServiceImpl implements ServiceEntityService {
             services = query.list();
             session.getTransaction().commit();
         } catch (Exception ex) {
-            log.error("Service finding Error!");
             if (session != null) {
                 session.getTransaction().rollback();
+                if (session.isOpen()) {
+                    session.close();
+                }
             }
+            throw new DBConnectionException(ex);
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
@@ -66,7 +64,7 @@ public class ServiceEntityServiceImpl implements ServiceEntityService {
     }
 
     @Override
-    public Service getById(Integer id) {
+    public Service getById(Integer id) throws DBConnectionException {
         Session session = null;
         Service service = null;
         try {
@@ -75,10 +73,13 @@ public class ServiceEntityServiceImpl implements ServiceEntityService {
             service = session.get(Service.class, id);
             session.getTransaction().commit();
         } catch (Exception ex) {
-            log.error("Service finding Error!");
             if (session != null) {
                 session.getTransaction().rollback();
+                if (session.isOpen()) {
+                    session.close();
+                }
             }
+            throw new DBConnectionException(ex);
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
@@ -88,7 +89,7 @@ public class ServiceEntityServiceImpl implements ServiceEntityService {
     }
 
     @Override
-    public boolean update(int id, Service service) {
+    public boolean update(int id, Service service) throws DBConnectionException {
         Session session = null;
         boolean isUpdated = false;
         try {
@@ -98,10 +99,13 @@ public class ServiceEntityServiceImpl implements ServiceEntityService {
             session.getTransaction().commit();
             isUpdated = true;
         } catch (Exception ex) {
-            log.error("Service updating Error!");
             if (session != null) {
                 session.getTransaction().rollback();
+                if (session.isOpen()) {
+                    session.close();
+                }
             }
+            throw new DBConnectionException(ex);
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
@@ -111,7 +115,7 @@ public class ServiceEntityServiceImpl implements ServiceEntityService {
     }
 
     @Override
-    public boolean delete(int id) {
+    public boolean delete(int id) throws DBConnectionException {
         Session session = null;
         boolean isDeleted = false;
         try {
@@ -123,10 +127,13 @@ public class ServiceEntityServiceImpl implements ServiceEntityService {
             session.getTransaction().commit();
             isDeleted = true;
         } catch (Exception ex) {
-            log.error("Service deleting Error!");
             if (session != null) {
                 session.getTransaction().rollback();
+                if (session.isOpen()) {
+                    session.close();
+                }
             }
+            throw new DBConnectionException(ex);
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();

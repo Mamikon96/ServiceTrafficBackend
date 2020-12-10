@@ -1,30 +1,22 @@
 package com.edu.web.services.impls;
 
 import com.edu.web.entities.Rate;
+import com.edu.web.exceptions.DBConnectionException;
 import com.edu.web.services.RateEntityService;
 import com.edu.web.utils.HibernateUtil;
-import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
-@Slf4j
+
 @Service
 public class RateEntityServiceImpl implements RateEntityService {
 
-    private static final Map<Integer, Rate> RATE_REPOSITORY_MAP = new HashMap<>();
-
-    private static final AtomicInteger RATE_ID_HOLDER = new AtomicInteger();
-
-
     @Override
-    public void create(Rate rate) {
+    public void create(Rate rate) throws DBConnectionException {
         Session session = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
@@ -32,10 +24,13 @@ public class RateEntityServiceImpl implements RateEntityService {
             session.save(rate);
             session.getTransaction().commit();
         } catch (Exception ex) {
-            log.error("Rate adding Error!");
             if (session != null) {
                 session.getTransaction().rollback();
+                if (session.isOpen()) {
+                    session.close();
+                }
             }
+            throw new DBConnectionException(ex);
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
@@ -44,7 +39,7 @@ public class RateEntityServiceImpl implements RateEntityService {
     }
 
     @Override
-    public List<Rate> getAll() {
+    public List<Rate> getAll() throws DBConnectionException {
         Session session = null;
         List<Rate> rates = new ArrayList<>();
         try {
@@ -54,10 +49,13 @@ public class RateEntityServiceImpl implements RateEntityService {
             rates = query.list();
             session.getTransaction().commit();
         } catch (Exception ex) {
-            log.error("Rate finding Error!");
             if (session != null) {
                 session.getTransaction().rollback();
+                if (session.isOpen()) {
+                    session.close();
+                }
             }
+            throw new DBConnectionException(ex);
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
@@ -67,7 +65,7 @@ public class RateEntityServiceImpl implements RateEntityService {
     }
 
     @Override
-    public Rate getById(int id) {
+    public Rate getById(int id) throws DBConnectionException {
         Session session = null;
         Rate rate = null;
         try {
@@ -76,10 +74,13 @@ public class RateEntityServiceImpl implements RateEntityService {
             rate = session.get(Rate.class, id);
             session.getTransaction().commit();
         } catch (Exception ex) {
-            log.error("Rate finding Error!");
             if (session != null) {
                 session.getTransaction().rollback();
+                if (session.isOpen()) {
+                    session.close();
+                }
             }
+            throw new DBConnectionException(ex);
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
@@ -89,7 +90,7 @@ public class RateEntityServiceImpl implements RateEntityService {
     }
 
     @Override
-    public boolean update(int id, Rate rate) {
+    public boolean update(int id, Rate rate) throws DBConnectionException {
         Session session = null;
         boolean isUpdated = false;
         try {
@@ -99,10 +100,13 @@ public class RateEntityServiceImpl implements RateEntityService {
             session.getTransaction().commit();
             isUpdated = true;
         } catch (Exception ex) {
-            log.error("Rate updating Error!" + ex);
             if (session != null) {
                 session.getTransaction().rollback();
+                if (session.isOpen()) {
+                    session.close();
+                }
             }
+            throw new DBConnectionException(ex);
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
@@ -112,7 +116,7 @@ public class RateEntityServiceImpl implements RateEntityService {
     }
 
     @Override
-    public boolean delete(int id) {
+    public boolean delete(int id) throws DBConnectionException {
         Session session = null;
         boolean isDeleted = false;
         try {
@@ -124,10 +128,13 @@ public class RateEntityServiceImpl implements RateEntityService {
             session.getTransaction().commit();
             isDeleted = true;
         } catch (Exception ex) {
-            log.error("Rate deleting Error!");
             if (session != null) {
                 session.getTransaction().rollback();
+                if (session.isOpen()) {
+                    session.close();
+                }
             }
+            throw new DBConnectionException(ex);
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();

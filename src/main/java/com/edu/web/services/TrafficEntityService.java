@@ -9,9 +9,9 @@ import java.util.List;
 public interface TrafficEntityService {
     void create(Traffic traffic) throws DBConnectionException;
     List<Traffic> getAll() throws DBConnectionException;
-    List<Traffic> getByRateId(int rateId);
-    List<Traffic> getByServiceId(int serviceId);
-    Traffic getByTrafficId(TrafficId trafficId);
-    boolean update(Traffic traffic);
-    boolean delete(Traffic traffic);
+    List<Traffic> getByRateId(int rateId) throws DBConnectionException;
+    List<Traffic> getByServiceId(int serviceId) throws DBConnectionException;
+    Traffic getByTrafficId(TrafficId trafficId) throws DBConnectionException;
+    boolean update(Traffic traffic) throws DBConnectionException;
+    boolean delete(Traffic traffic) throws DBConnectionException;
 }

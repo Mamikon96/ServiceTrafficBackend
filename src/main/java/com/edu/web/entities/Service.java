@@ -38,6 +38,16 @@ public class Service implements Serializable {
     @Setter
     private List<Traffic> rates = new ArrayList<>();
 
+    @OneToMany(
+            mappedBy = "service",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY
+    )
+    @JsonManagedReference(value = "service-clients")
+    @Getter
+    @Setter
+    private List<Consumption> clients = new ArrayList<>();
+
     public Service() {
     }
 

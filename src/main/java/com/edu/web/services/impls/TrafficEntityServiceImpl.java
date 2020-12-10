@@ -5,28 +5,16 @@ import com.edu.web.entities.TrafficId;
 import com.edu.web.exceptions.DBConnectionException;
 import com.edu.web.services.TrafficEntityService;
 import com.edu.web.utils.HibernateUtil;
-import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
-@Slf4j
+
 @Service
 public class TrafficEntityServiceImpl implements TrafficEntityService {
-
-    private static final Map<TrafficId, Traffic> TRAFFIC_REPOSITORY_MAP = new HashMap<>();
-
-    private static final AtomicInteger RATE_ID_HOLDER = new AtomicInteger();
-    private static final AtomicInteger SERVICE_ID_HOLDER = new AtomicInteger();
-
 
     @Override
     public void create(Traffic traffic) throws DBConnectionException {
@@ -37,11 +25,13 @@ public class TrafficEntityServiceImpl implements TrafficEntityService {
             session.save(traffic);
             session.getTransaction().commit();
         } catch (Exception ex) {
-            log.error(ex.getCause().toString());
             if (session != null) {
                 session.getTransaction().rollback();
+                if (session.isOpen()) {
+                    session.close();
+                }
             }
-            throw new DBConnectionException("Traffic add Error!!!");
+            throw new DBConnectionException(ex);
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
@@ -62,9 +52,11 @@ public class TrafficEntityServiceImpl implements TrafficEntityService {
         } catch (Exception ex) {
             if (session != null) {
                 session.getTransaction().rollback();
+                if (session.isOpen()) {
+                    session.close();
+                }
             }
-            log.error("Traffic finding Error!");
-            throw new DBConnectionException("Traffics get Error!!!");
+            throw new DBConnectionException(ex);
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
@@ -74,7 +66,7 @@ public class TrafficEntityServiceImpl implements TrafficEntityService {
     }
 
     @Override
-    public List<Traffic> getByRateId(int rateId) {
+    public List<Traffic> getByRateId(int rateId) throws DBConnectionException {
         Session session = null;
         List<Traffic> traffics = null;
         try {
@@ -85,10 +77,13 @@ public class TrafficEntityServiceImpl implements TrafficEntityService {
             traffics = query.list();
             session.getTransaction().commit();
         } catch (Exception ex) {
-            log.error("Traffic finding Error!");
             if (session != null) {
                 session.getTransaction().rollback();
+                if (session.isOpen()) {
+                    session.close();
+                }
             }
+            throw new DBConnectionException(ex);
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
@@ -98,7 +93,7 @@ public class TrafficEntityServiceImpl implements TrafficEntityService {
     }
 
     @Override
-    public List<Traffic> getByServiceId(int serviceId) {
+    public List<Traffic> getByServiceId(int serviceId) throws DBConnectionException {
         Session session = null;
         List<Traffic> traffics = null;
         try {
@@ -109,10 +104,13 @@ public class TrafficEntityServiceImpl implements TrafficEntityService {
             traffics = query.list();
             session.getTransaction().commit();
         } catch (Exception ex) {
-            log.error("Traffic finding Error!");
             if (session != null) {
                 session.getTransaction().rollback();
+                if (session.isOpen()) {
+                    session.close();
+                }
             }
+            throw new DBConnectionException(ex);
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
@@ -122,7 +120,7 @@ public class TrafficEntityServiceImpl implements TrafficEntityService {
     }
 
     @Override
-    public Traffic getByTrafficId(TrafficId trafficId) {
+    public Traffic getByTrafficId(TrafficId trafficId) throws DBConnectionException {
         Session session = null;
         Traffic traffic = null;
         try {
@@ -131,10 +129,13 @@ public class TrafficEntityServiceImpl implements TrafficEntityService {
             traffic = session.get(Traffic.class, trafficId);
             session.getTransaction().commit();
         } catch (Exception ex) {
-            log.error("Traffic finding Error!");
             if (session != null) {
                 session.getTransaction().rollback();
+                if (session.isOpen()) {
+                    session.close();
+                }
             }
+            throw new DBConnectionException(ex);
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
@@ -144,7 +145,7 @@ public class TrafficEntityServiceImpl implements TrafficEntityService {
     }
 
     @Override
-    public boolean update(Traffic traffic) {
+    public boolean update(Traffic traffic) throws DBConnectionException {
         Session session = null;
         boolean isUpdated = false;
         try {
@@ -154,10 +155,13 @@ public class TrafficEntityServiceImpl implements TrafficEntityService {
             session.getTransaction().commit();
             isUpdated = true;
         } catch (Exception ex) {
-            log.error("Traffic updating Error!");
             if (session != null) {
                 session.getTransaction().rollback();
+                if (session.isOpen()) {
+                    session.close();
+                }
             }
+            throw new DBConnectionException(ex);
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
@@ -167,22 +171,23 @@ public class TrafficEntityServiceImpl implements TrafficEntityService {
     }
 
     @Override
-    public boolean delete(Traffic traffic) {
+    public boolean delete(Traffic traffic) throws DBConnectionException {
         Session session = null;
         boolean isDeleted = false;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             session.beginTransaction();
-//            Object persistentInstance = session.get(Traffic.class, id);
             session.delete(traffic);
-//            session.delete(service);
             session.getTransaction().commit();
             isDeleted = true;
         } catch (Exception ex) {
-            log.error("Traffic deleting Error!");
             if (session != null) {
                 session.getTransaction().rollback();
+                if (session.isOpen()) {
+                    session.close();
+                }
             }
+            throw new DBConnectionException(ex);
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
