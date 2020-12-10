@@ -1,6 +1,7 @@
 package com.edu.web.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,16 +17,18 @@ public class Consumption implements Serializable {
     @EmbeddedId
     @Getter
     @Setter
-    private ConsumptionId id = new ConsumptionId();
+    private ConsumptionId consumptionId;
 
     @ManyToOne
     @MapsId("clientId")
+    @JsonBackReference(value = "client-services")
     @Getter
     @Setter
     private Client client;
 
     @ManyToOne
     @MapsId("serviceId")
+    @JsonBackReference(value = "service-clients")
     @Getter
     @Setter
     private Service service;
@@ -42,6 +45,10 @@ public class Consumption implements Serializable {
     private Double consumptionTraffic;
 
     public Consumption() {
+    }
+
+    public Consumption(Double consumptionTraffic) {
+        this.consumptionTraffic = consumptionTraffic;
     }
 
     /*public Client getClient() {
@@ -68,14 +75,14 @@ public class Consumption implements Serializable {
         this.consumptionTraffic = consumptionTraffic;
     }
 */
+
     @Override
     public String toString() {
         return "Consumption{" +
-                "id=" + id +
+                "consumptionId=" + consumptionId +
                 ", client=" + client +
                 ", service=" + service +
                 ", consumptionTraffic=" + consumptionTraffic +
                 '}';
     }
-
 }
