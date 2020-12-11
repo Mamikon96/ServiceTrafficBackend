@@ -6,9 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "client")
@@ -52,12 +50,12 @@ public class Client implements Serializable {
     @OneToMany(
             mappedBy = "client",
             cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY
+            fetch = FetchType.EAGER
     )
     @JsonManagedReference(value = "client-services")
     @Getter
     @Setter
-    private List<Consumption> services = new ArrayList<>();
+    private Set<Consumption> services = new HashSet<>();
 
     public Client() {
     }

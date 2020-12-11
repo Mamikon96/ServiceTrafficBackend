@@ -8,6 +8,7 @@ import lombok.ToString;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -41,12 +42,12 @@ public class Service implements Serializable {
     @OneToMany(
             mappedBy = "service",
             cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY
+            fetch = FetchType.EAGER
     )
     @JsonManagedReference(value = "service-clients")
     @Getter
     @Setter
-    private List<Consumption> clients = new ArrayList<>();
+    private Set<Consumption> clients = new HashSet<>();
 
     public Service() {
     }
