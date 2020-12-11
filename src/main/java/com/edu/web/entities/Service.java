@@ -1,5 +1,6 @@
 package com.edu.web.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,9 +33,9 @@ public class Service implements Serializable {
     @OneToMany(
             mappedBy = "service",
             cascade = CascadeType.ALL,
-            fetch = FetchType.EAGER
+            fetch = FetchType.LAZY // EAGER
     )
-    @JsonManagedReference(value = "service-rates")
+    @JsonBackReference(value = "service-rates")
     @Getter
     @Setter
     private List<Traffic> rates = new ArrayList<>();
@@ -42,9 +43,9 @@ public class Service implements Serializable {
     @OneToMany(
             mappedBy = "service",
             cascade = CascadeType.ALL,
-            fetch = FetchType.EAGER
+            fetch = FetchType.LAZY // EAGER
     )
-    @JsonManagedReference(value = "service-clients")
+    @JsonBackReference(value = "service-clients")
     @Getter
     @Setter
     private Set<Consumption> clients = new HashSet<>();
