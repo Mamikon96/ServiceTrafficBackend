@@ -25,7 +25,7 @@ public class Service implements Serializable {
     @Setter
     private Integer serviceId;
 
-    @Column(name = "service_name")
+    @Column(name = "service_name", unique = true)
     @Getter
     @Setter
     private String serviceName;
@@ -38,7 +38,7 @@ public class Service implements Serializable {
     @JsonBackReference(value = "service-rates")
     @Getter
     @Setter
-    private List<Traffic> rates = new ArrayList<>();
+    private Set<Traffic> rates = new HashSet<>();
 
     @OneToMany(
             mappedBy = "service",

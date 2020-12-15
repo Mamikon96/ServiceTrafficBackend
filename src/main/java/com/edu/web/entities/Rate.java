@@ -22,7 +22,7 @@ public class Rate implements Serializable {
     @Setter
     private Integer rateId;
 
-    @Column(name = "rate_name")
+    @Column(name = "rate_name", unique = true)
     @Getter
     @Setter
     private String rateName;
@@ -42,7 +42,7 @@ public class Rate implements Serializable {
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY //EAGER
     )
-    @JsonBackReference
+    @JsonBackReference(value = "rate-services")
     @Getter
     @Setter
     private Set<Traffic> services = new HashSet<>();

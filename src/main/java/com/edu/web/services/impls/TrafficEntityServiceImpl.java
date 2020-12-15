@@ -171,13 +171,14 @@ public class TrafficEntityServiceImpl implements TrafficEntityService {
     }
 
     @Override
-    public boolean delete(Traffic traffic) throws DBConnectionException {
+    public boolean delete(TrafficId trafficId) throws DBConnectionException {
         Session session = null;
         boolean isDeleted = false;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             session.beginTransaction();
-            session.delete(traffic);
+            Object persistentInstance = session.load(Traffic.class, trafficId);
+            session.delete(persistentInstance);
             session.getTransaction().commit();
             isDeleted = true;
         } catch (Exception ex) {

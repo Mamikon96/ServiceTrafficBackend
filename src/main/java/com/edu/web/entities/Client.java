@@ -28,7 +28,7 @@ public class Client implements Serializable {
     @Setter
     private Rate rate;
 
-    @Column(name = "client_name")
+    @Column(name = "client_name", unique = true)
     @Getter
     @Setter
     private String clientName;

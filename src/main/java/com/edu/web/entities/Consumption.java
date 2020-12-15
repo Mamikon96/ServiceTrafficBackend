@@ -2,6 +2,7 @@ package com.edu.web.entities;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,6 +24,7 @@ public class Consumption implements Serializable {
     @ManyToOne
     @MapsId("clientId")
     @JsonManagedReference(value = "client-services")
+    @JsonIgnore
     @Getter
     @Setter
     private Client client;
@@ -30,6 +32,7 @@ public class Consumption implements Serializable {
     @ManyToOne
     @MapsId("serviceId")
     @JsonManagedReference(value = "service-clients")
+    @JsonIgnore
     @Getter
     @Setter
     private Service service;

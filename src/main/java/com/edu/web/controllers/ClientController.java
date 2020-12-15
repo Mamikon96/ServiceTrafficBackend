@@ -92,10 +92,10 @@ public class ClientController {
         }
     }
 
-    @DeleteMapping("/clients")
-    public ResponseEntity<?> delete(@RequestBody Client client) {
+    @DeleteMapping("/clients/{id}")
+    public ResponseEntity<?> delete(@PathVariable(name = "id") int id) {
         try {
-            final boolean deleted = clientEntityService.delete(client);
+            final boolean deleted = clientEntityService.delete(id);
             return deleted
                     ? new ResponseEntity<>(HttpStatus.OK)
                     : new ResponseEntity<>(HttpStatus.NOT_FOUND);

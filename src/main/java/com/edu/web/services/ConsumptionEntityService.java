@@ -14,5 +14,5 @@ public interface ConsumptionEntityService {
     List<Consumption> getByServiceId(int serviceId) throws DBConnectionException;
     Consumption getByConsumptionId(ConsumptionId consumptionId) throws DBConnectionException;
     boolean update(Consumption consumption) throws DBConnectionException;
-    boolean delete(Consumption consumption) throws DBConnectionException;
+    boolean delete(ConsumptionId consumptionId) throws DBConnectionException;
 }

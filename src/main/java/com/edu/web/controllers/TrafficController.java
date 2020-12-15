@@ -114,10 +114,12 @@ public class TrafficController {
         }
     }
 
-    @DeleteMapping("/traffics")
-    public ResponseEntity<?> delete(@RequestBody Traffic traffic) {
+    @DeleteMapping("/traffics/rate/{rateId}/service/{serviceId}")
+    public ResponseEntity<?> delete(@PathVariable(name = "rateId") int rateId,
+                                    @PathVariable(name = "serviceId") int serviceId) {
         try {
-            final boolean deleted = trafficEntityService.delete(traffic);
+            TrafficId trafficId = new TrafficId(rateId, serviceId);
+            final boolean deleted = trafficEntityService.delete(trafficId);
             return deleted
                     ? new ResponseEntity<>(HttpStatus.OK)
                     : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);

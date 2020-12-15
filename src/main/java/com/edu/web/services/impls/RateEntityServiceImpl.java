@@ -90,7 +90,7 @@ public class RateEntityServiceImpl implements RateEntityService {
     }
 
     @Override
-    public boolean update(int id, Rate rate) throws DBConnectionException {
+    public boolean update(Rate rate) throws DBConnectionException {
         Session session = null;
         boolean isUpdated = false;
         try {

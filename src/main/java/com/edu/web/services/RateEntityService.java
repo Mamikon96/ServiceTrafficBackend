@@ -9,6 +9,6 @@ public interface RateEntityService {
     void create(Rate rate) throws DBConnectionException;
     List<Rate> getAll() throws DBConnectionException;
     Rate getById(int id) throws DBConnectionException;
-    boolean update(int id, Rate rate) throws DBConnectionException;
+    boolean update(Rate rate) throws DBConnectionException;
     boolean delete(int id) throws DBConnectionException;
 }

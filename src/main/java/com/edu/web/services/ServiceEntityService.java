@@ -9,6 +9,6 @@ public interface ServiceEntityService {
     void create(Service service) throws DBConnectionException;
     List<Service> getAll() throws DBConnectionException;
     Service getById(Integer id) throws DBConnectionException;
-    boolean update(int id, Service service) throws DBConnectionException;
+    boolean update(Service service) throws DBConnectionException;
     boolean delete(int id) throws DBConnectionException;
 }
