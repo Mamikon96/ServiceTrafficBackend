@@ -33,7 +33,7 @@ public class ServiceController {
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (DBConnectionException ex) {
             log.error(ex.getCause().toString());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -63,10 +63,10 @@ public class ServiceController {
         }
     }
 
-    @PutMapping("/services/{id}")
-    public ResponseEntity<?> update(@PathVariable(name = "id") int id, @RequestBody Service service) {
+    @PutMapping("/services")
+    public ResponseEntity<?> update(@RequestBody Service service) {
         try {
-            final boolean updated = serviceEntityService.update(id, service);
+            final boolean updated = serviceEntityService.update(service);
             return updated
                     ? new ResponseEntity<>(HttpStatus.OK)
                     : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);

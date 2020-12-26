@@ -89,7 +89,7 @@ public class ServiceEntityServiceImpl implements ServiceEntityService {
     }
 
     @Override
-    public boolean update(int id, Service service) throws DBConnectionException {
+    public boolean update(Service service) throws DBConnectionException {
         Session session = null;
         boolean isUpdated = false;
         try {

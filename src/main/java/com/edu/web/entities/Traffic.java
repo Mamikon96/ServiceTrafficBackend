@@ -1,6 +1,8 @@
 package com.edu.web.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,14 +22,16 @@ public class Traffic implements Serializable {
 
     @ManyToOne
     @MapsId("rateId")
-    @JsonBackReference
+    @JsonManagedReference(value = "rate-services")
+    @JsonIgnore
     @Getter
     @Setter
     private Rate rate;
 
     @ManyToOne
     @MapsId("serviceId")
-    @JsonBackReference(value = "service-rates")
+    @JsonManagedReference(value = "service-rates")
+    @JsonIgnore
     @Getter
     @Setter
     private Service service;
@@ -44,9 +48,4 @@ public class Traffic implements Serializable {
         this.traffic = traffic;
     }
 
-    public Traffic(Rate rate, Service service, Integer traffic) {
-        this.rate = rate;
-        this.service = service;
-        this.traffic = traffic;
-    }
 }

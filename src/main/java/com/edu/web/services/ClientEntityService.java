@@ -11,5 +11,5 @@ public interface ClientEntityService {
     Client getById(int id) throws DBConnectionException;
     List<Client> getByRateId(int rateId) throws DBConnectionException;
     boolean update(Client client) throws DBConnectionException;
-    boolean delete(Client client) throws DBConnectionException;
+    boolean delete(int id) throws DBConnectionException;
 }

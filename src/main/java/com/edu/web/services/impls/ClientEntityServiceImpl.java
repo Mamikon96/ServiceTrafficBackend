@@ -143,13 +143,14 @@ public class ClientEntityServiceImpl implements ClientEntityService {
     }
 
     @Override
-    public boolean delete(Client client) throws DBConnectionException {
+    public boolean delete(int id) throws DBConnectionException {
         Session session = null;
         boolean isDeleted = false;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             session.beginTransaction();
-            session.delete(client);
+            Object persistentInstance = session.load(Client.class, id);
+            session.delete(persistentInstance);
             session.getTransaction().commit();
             isDeleted = true;
         } catch (Exception ex) {

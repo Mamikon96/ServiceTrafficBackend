@@ -13,5 +13,5 @@ public interface TrafficEntityService {
     List<Traffic> getByServiceId(int serviceId) throws DBConnectionException;
     Traffic getByTrafficId(TrafficId trafficId) throws DBConnectionException;
     boolean update(Traffic traffic) throws DBConnectionException;
-    boolean delete(Traffic traffic) throws DBConnectionException;
+    boolean delete(TrafficId trafficId) throws DBConnectionException;
 }

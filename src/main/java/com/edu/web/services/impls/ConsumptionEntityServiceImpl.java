@@ -171,13 +171,14 @@ public class ConsumptionEntityServiceImpl implements ConsumptionEntityService {
     }
 
     @Override
-    public boolean delete(Consumption consumption) throws DBConnectionException {
+    public boolean delete(ConsumptionId consumptionId) throws DBConnectionException {
         Session session = null;
         boolean isDeleted = false;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             session.beginTransaction();
-            session.delete(consumption);
+            Object persistentInstance = session.load(Consumption.class, consumptionId);
+            session.delete(persistentInstance);
             session.getTransaction().commit();
             isDeleted = true;
         } catch (Exception ex) {

@@ -117,10 +117,12 @@ public class ConsumptionController {
         }
     }
 
-    @DeleteMapping("/consumptions")
-    public ResponseEntity<?> delete(@RequestBody Consumption consumption) {
+    @DeleteMapping("/consumptions/client/{clientId}/service/{serviceId}")
+    public ResponseEntity<?> delete(@PathVariable(name = "clientId") int clientId,
+                                    @PathVariable(name = "serviceId") int serviceId) {
         try {
-            final boolean deleted = consumptionEntityService.delete(consumption);
+            ConsumptionId consumptionId = new ConsumptionId(clientId, serviceId);
+            final boolean deleted = consumptionEntityService.delete(consumptionId);
             return deleted
                     ? new ResponseEntity<>(HttpStatus.OK)
                     : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);

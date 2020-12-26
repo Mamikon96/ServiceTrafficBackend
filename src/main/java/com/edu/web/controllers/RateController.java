@@ -66,10 +66,10 @@ public class RateController {
         }
     }
 
-    @PutMapping("/rates/{id}")
-    public ResponseEntity<?> update(@PathVariable(name = "id") int id, @RequestBody Rate rate) {
+    @PutMapping("/rates")
+    public ResponseEntity<?> update(@RequestBody Rate rate) {
         try {
-            final boolean updated = rateEntityService.update(id, rate);
+            final boolean updated = rateEntityService.update(rate);
             return updated
                     ? new ResponseEntity<>(HttpStatus.OK)
                     : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
